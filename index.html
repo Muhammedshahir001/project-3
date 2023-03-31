@@ -398,33 +398,35 @@
 
           <div class="col-lg-8 mt-5 mt-lg-0">
 
-            <form id="submit-form" action="">
+          
+            <form action="" id="submitform" name="submitform" class="gtform">
               <div class="row">
-                <div class="col-md-6 form-group mt-3 mt-md-0">
-                  <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
+                <div class="col-md-6 mb-3">
+                  <div class="form-group">
+                    <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" >
+                  </div>
                 </div>
-                <div class="col-md-6 form-group mt-3 mt-md-0">
-                  <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
+                <div class="col-md-6 mb-3">
+                  <div class="form-group">
+                    <input type="text" class="form-control" name="email" id="email" placeholder="Your Email" >
+                  </div>
+                </div>
+                <div class="col-md-12 mb-3">
+                  <div class="form-group">
+                    <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject">
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <textarea class="form-control" id="message" name="message" rows="5" placeholder="Message" ></textarea>
+                  </div>
+                </div>
+                
+                <div class="col-md-12 text-center">
+                  <button onclick="isName()" type="submit" class="text-center">Send Message</button>
                 </div>
               </div>
-              <div class="form-group mt-3">
-                <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
-              </div>
-              <div class="form-group mt-3">
-                <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
-              </div>
-              <div class="my-3">
-                <div class="loading">Loading</div>
-                <div class="error-message"></div>
-                <div class="sent-message"></div>
-              </div>
-              <div class="text-center"><button onclick="send()" type="submit">Send Message</button></div>
-              <script>
-                function send(){
-               alert("Your message has been sent. Thank you!")
-                }
-              </script>
-            </form>
+            </form>
 
           </div>
 
@@ -477,25 +479,79 @@
 
 
 
-  <script>
-    $("#submit-form").submit((e)=>{
-        e.preventDefault()
-        $.ajax({
-            url:"https://script.google.com/macros/s/AKfycbyLwxi-5ZhQxEMyy0cpfqpr70d8yktRbEzxKFlM6bk0oOE6KUCdYrr4ETUAetPKMyyO/exec",
-            data:$("#submit-form").serialize(),
-            method:"post",
-            success:function (response){
-                alert("Form submitted successfully")
-                window.location.reload()
-                //window.location.href="https://google.com"
-            },
-            error:function (err){
-                alert("Something Error")
+  
+<script>
+  const form = document.getElementById("submitform");
+  const nameInput = document.getElementById("name");
+  const emailInput = document.getElementById("email");
+  const subjectinput = document.getElementById("subject")
+  const messageInput = document.getElementById("message");
 
-            }
-        })
-    })
-</script>
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    if (nameInput.value.trim() === "") {
+      alert("Please enter your name.");
+      nameInput.focus();
+      return false;
+    }
+    else if (!isName(nameInput.value)) {
+      alert("Please enter valid name.");
+      nameInput.focus();
+      return false;
+    }
+
+    if (emailInput.value.trim() === "") {
+      alert("Please enter your email.");
+      emailInput.focus();
+      return false;
+    }
+    else if (!isEmail(emailInput.value)) {
+      alert("Please enter valid email.");
+      emailInput.focus();
+      return false;
+    }
+    if (subjectinput.value.trim() === "") {
+      alert("enter your subject")
+      subjectinput.focus();
+      return false;
+    }
+
+    if (messageInput.value.trim() === "") {
+      alert("Please enter your message.");
+      messageInput.focus();
+      return false;
+    }
+
+    // All form fields are valid,submit the form using AJAX
+    $.ajax({
+      url: "https://script.google.com/macros/s/AKfycbyLwxi-5ZhQxEMyy0cpfqpr70d8yktRbEzxKFlM6bk0oOE6KUCdYrr4ETUAetPKMyyO/exec",
+      method: "POST",
+      data: {
+        name: nameInput.value,
+        email: emailInput.value,
+        subject: subjectinput.value,
+        message: messageInput.value
+      },
+      success: function (response) {
+        alert("Form submitted successfully");
+        window.location.reload();
+
+      },
+      error: function (err) {
+        alert("Something Error")
+      }
+    });
+  });
+
+  function isEmail(email) {
+    return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email);
+  }
+
+  function isName(name){
+    /^([^0-9]*)$/.test(name);
+   }
+  </script>
 
 </body>
 
